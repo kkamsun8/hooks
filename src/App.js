@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react'
+import List from './List'
+import useFetch from './useFetch'
+
+
 
 function App() {
+  const [todos, setTodos] = useState([]);
+  const [newTodo, setNewTodo] = useState();
+
+  const loading = useFetch(setTodos, 'http://localhost:8080/todo');
+
+  const changeInputData = (e) => {
+    setNewTodo(e.target.value);
+  }
+
+  const addTodo = (e) => {
+    e.preventDefault();
+    setTodos([...todos, { 'title': newTodo, 'id': todos.length, 'status': 'todo' }]);
+  }
+
+  useEffect(() => {
+    console.log("새로운 내용이 렌더링됐네용", todos)
+  }, [todos])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <>
+      <h1>todo 어플리케이션</h1>
+
+      <form action="">
+        <input type="text" name="" onChange={changeInputData} />
+        <button onClick={addTodo}>할일추가</button>
+      </form>
+
+      <List todos={todos} loading={loading} />
+    </>
+  )
 }
 
-export default App;
+export default App
